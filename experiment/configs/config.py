@@ -1,8 +1,9 @@
 import logging
 import sys
 import warnings
-
-import gym
+import ale_py
+import shimmy
+import gymnasium as gym
 import numpy as np
 import pyvirtualdisplay
 
@@ -16,7 +17,7 @@ if not sys.warnoptions:
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
-env = gym.make('Asteroids-v0')
+env = gym.make('ALE/Asteroids-v5')
 
 np.set_printoptions(linewidth=100)
 

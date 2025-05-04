@@ -40,14 +40,14 @@ def eval_fitness(config, candidate_params=None, test_mode=False):
 
     for _ in range(TunerConfig.TRIALS):
         net = RecurrentNetwork.create(genome, config)
-        ob = env.reset()
+        ob, info = env.reset()
         total_reward = 0
         step = 0
         done = False
 
         while not done:
             action, new_ob = get_action(net, ob)
-            ob, reward, done, info = env.step(action)
+            ob, reward, done, trunc, info = env.step(action)
             step += 1
             total_reward += reward
 
