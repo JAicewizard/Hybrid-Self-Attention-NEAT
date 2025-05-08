@@ -72,13 +72,13 @@ for i in {1..n}; do python3.7 -m experiment.runner; done
 
 #### To tune the model:
 * First, check you trained the model, and the model successfully saved in `experiments/` as `main_model.pkl`
-* Run the `tunner.py` as below:
+* Run the `tuner.py` as below:
 ~~~~
-python3.7 -m experiment.tunner
+python3.7 -m experiment.tuner
 ~~~~
 _NOTE: If you have limited resources (like RAM), you should decrease the number of iterations and instead use loops command (n is the number of iterations)_
 ~~~~
-for i in {1..n}; do python3.7 -m experiment.tunner; done
+for i in {1..n}; do python3.7 -m experiment.tuner; done
 ~~~~
 
 ### Citation
