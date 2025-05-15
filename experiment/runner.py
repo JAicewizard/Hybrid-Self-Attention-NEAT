@@ -113,7 +113,6 @@ def run(population, generations=AttentionNEATConfig.GENERATIONS):
                             parallel_runner.evaluate_cmaes_for_attention)
     save_result(winner)
 
-
 if __name__ == '__main__':
     runner = load(reset=False)
     run(runner.population)

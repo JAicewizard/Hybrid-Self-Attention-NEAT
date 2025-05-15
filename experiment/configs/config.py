@@ -1,13 +1,13 @@
 import logging
 import sys
 import warnings
-import ale_py
 import shimmy
 import gymnasium as gym
 import numpy as np
 import pyvirtualdisplay
 
 import neat
+import gymnasium_snake_game
 
 # _display = pyvirtualdisplay.Display(visible=False, size=(1400, 900))
 # _display.start()
@@ -17,8 +17,7 @@ if not sys.warnoptions:
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
-env = gym.make('ALE/Asteroids-v5')
-
+env = gym.make('Snake-v1')
 np.set_printoptions(linewidth=100)
 
 BASE_DIR = 'experiment/'
@@ -38,7 +37,7 @@ class AttentionNEATConfig:
 
 
 class SelfAttentionConfig:
-    IMAGE_SHAPE = (210, 160, 3)
+    IMAGE_SHAPE = (16, 16, 3)
     PATCH_SIZE = 10
     PATCH_STRIDE = 5
     TRANSFORMER_D = 4
