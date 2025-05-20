@@ -12,6 +12,7 @@ import gymnasium_snake_game
 import os
 
 os.environ['PYVIRTUALDISPLAY_DISPLAYFD'] = '0'
+
 _display = pyvirtualdisplay.Display(visible=True, size=(1400, 900))
 _display.start()
 

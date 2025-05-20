@@ -62,7 +62,6 @@ def eval_fitness(genome, config, candidate_params=None):
             step += 1
             total_reward += reward
             env.render()
-            print("a")
 
         fitness.append(total_reward)
 
