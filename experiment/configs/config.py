@@ -11,10 +11,12 @@ import gymnasium_snake_game
 
 import os
 
+print(gymnasium_snake_game.__file__)
+
 os.environ['PYVIRTUALDISPLAY_DISPLAYFD'] = '0'
 
-_display = pyvirtualdisplay.Display(visible=True, size=(1400, 900))
-_display.start()
+# _display = pyvirtualdisplay.Display(visible=True, size=(1400, 900))
+# _display.start()
 
 if not sys.warnoptions:
     warnings.simplefilter("ignore")

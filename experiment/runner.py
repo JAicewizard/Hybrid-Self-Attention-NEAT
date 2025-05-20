@@ -1,6 +1,7 @@
 import os
 import pickle
 import time
+import sys 
 
 from base_runner import BaseAttentionRunnerModule
 from cma_es import CMAEvolutionStrategy
@@ -58,10 +59,11 @@ def eval_fitness(genome, config, candidate_params=None):
             action, new_ob = get_action(net, ob)
             ob, reward, done, trunc, info = env.step(action)
             if trunc:
-                raise "AA"
+                env.reset()
             step += 1
-            total_reward += reward
-            env.render()
+            total_reward += reward+0.001
+            print(total_reward)
+            #env.render()
 
         fitness.append(total_reward)
 
