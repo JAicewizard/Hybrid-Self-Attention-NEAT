@@ -9,15 +9,15 @@ import pyvirtualdisplay
 import neat
 import gymnasium_snake_game
 
-# _display = pyvirtualdisplay.Display(visible=False, size=(1400, 900))
-# _display.start()
+_display = pyvirtualdisplay.Display(visible=True, size=(1400, 900))
+_display.start()
 
 if not sys.warnoptions:
     warnings.simplefilter("ignore")
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
-env = gym.make('Snake-v1')
+env = gym.make('Snake-v1', render_mode="human")
 np.set_printoptions(linewidth=100)
 
 BASE_DIR = 'experiment/'
