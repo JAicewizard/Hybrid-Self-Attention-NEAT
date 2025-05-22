@@ -55,6 +55,8 @@ def eval_fitness(genome, config, candidate_params=None):
         step = 0
         done = False
 
+        MAX_STEPS = 500 # Prevent infinite loops
+
         while not done:
             action, new_ob = get_action(net, ob)
             ob, reward, done, trunc, info = env.step(action)
@@ -62,7 +64,7 @@ def eval_fitness(genome, config, candidate_params=None):
                 env.reset()
             step += 1
             total_reward += reward+0.001
-            print(total_reward)
+            #print(total_reward)
             #env.render()
 
         fitness.append(total_reward)
@@ -117,5 +119,6 @@ def run(population, generations=AttentionNEATConfig.GENERATIONS):
     save_result(winner)
 
 if __name__ == '__main__':
+    print(SelfAttentionConfig.IMAGE_SHAPE)
     runner = load(reset=False)
     run(runner.population)

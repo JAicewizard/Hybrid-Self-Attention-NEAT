@@ -1,9 +1,7 @@
-#--- parameters for the Attention NEAT regarding the Asteroids-v0 experiment  ---#
-
 [NEAT]
 fitness_criterion     = max
 fitness_threshold     = 5000
-pop_size              = 64
+pop_size              = 200
 reset_on_extinction   = True
 
 [DefaultGenome]
@@ -22,17 +20,17 @@ bias_init_mean          = 0.0
 bias_init_stdev         = 1.0
 bias_max_value          = 30.0
 bias_min_value          = -30.0
-bias_mutate_power       = 0.5
-bias_mutate_rate        = 0.8
-bias_replace_rate       = 0.1
+bias_mutate_power       = 2.093
+bias_mutate_rate        = 0.0509
+bias_replace_rate       = 0.05
 
 # genome compatibility options
 compatibility_disjoint_coefficient = 1.0
 compatibility_weight_coefficient   = 0.4
 
 # connection add/remove rates
-conn_add_prob           = 0.05
-conn_delete_prob        = 0.05
+conn_add_prob           = 0.988
+conn_delete_prob        = 0.146
 
 # connection enable options
 enabled_default         = True
@@ -42,12 +40,12 @@ feed_forward            = False
 initial_connection      = full_nodirect
 
 # node add/remove rates
-node_add_prob           = 0.03
-node_delete_prob        = 0.03
+node_add_prob           = 0.085
+node_delete_prob        = 0.0352
 
 # network parameters
 num_hidden              = 0
-num_inputs              = 9
+num_inputs              = 33
 num_outputs             = 4
 
 # node response options
@@ -56,7 +54,7 @@ response_init_stdev     = 0.0
 response_max_value      = 30.0
 response_min_value      = -30.0
 response_mutate_power   = 0.0
-response_mutate_rate    = 0.0
+response_mutate_rate    = 0.1
 response_replace_rate   = 0.0
 
 # connection weight options
@@ -64,15 +62,15 @@ weight_init_mean        = 0.0
 weight_init_stdev       = 1.0
 weight_max_value        = 30.0
 weight_min_value        = -30.0
-weight_mutate_power     = 0.05
-weight_mutate_rate      = 0.8
-weight_replace_rate     = 0.1
+weight_mutate_power     = 0.825
+weight_mutate_rate      = 0.460
+weight_replace_rate     = 0.0245
 
 [DefaultSpeciesSet]
 compatibility_threshold = 3.0
 
 [DefaultStagnation]
-species_fitness_func = max
+species_fitness_func = mean
 max_stagnation       = 15
 species_elitism      = 2
 

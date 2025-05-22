@@ -24,15 +24,16 @@ if not sys.warnoptions:
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 env = gym.make('Snake-v1', render_mode="human")
+#env = gym.make('Snake-v1', render_mode=None)
 np.set_printoptions(linewidth=100)
 
 BASE_DIR = 'experiment/'
-CPU_COUNT = 8
+CPU_COUNT = 6
 
 
 class AttentionNEATConfig:
     ACTIVATION = 'sigmoid'
-    GENERATIONS = 10
+    GENERATIONS = 30
     TEST = 10
     TRIALS = 3
     NEAT_CONFIG = neat.config.Config(neat.genome.DefaultGenome,
@@ -44,10 +45,10 @@ class AttentionNEATConfig:
 
 class SelfAttentionConfig:
     IMAGE_SHAPE = (16, 16, 3)
-    PATCH_SIZE = 10
-    PATCH_STRIDE = 5
+    PATCH_SIZE = 1
+    PATCH_STRIDE = 1
     TRANSFORMER_D = 4
-    TOP_K = 10
+    TOP_K = 16
 
 
 class CMAESConfig:
@@ -56,7 +57,7 @@ class CMAESConfig:
 
 
 class TunerConfig:
-    GENERATIONS = 10
+    GENERATIONS = 100
     TEST = 10
     TRIALS = 3
     POP_SIZE = 32
