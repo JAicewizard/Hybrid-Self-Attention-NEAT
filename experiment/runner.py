@@ -63,7 +63,7 @@ def eval_fitness(genome, config, candidate_params=None):
             if trunc:
                 env.reset()
             step += 1
-            total_reward += reward+0.001
+            total_reward += reward+0.1
             #print(total_reward)
             #env.render()
 

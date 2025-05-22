@@ -35,7 +35,7 @@ class AttentionNEATConfig:
     ACTIVATION = 'sigmoid'
     GENERATIONS = 30
     TEST = 10
-    TRIALS = 3
+    TRIALS = 1
     NEAT_CONFIG = neat.config.Config(neat.genome.DefaultGenome,
                                      neat.reproduction.DefaultReproduction,
                                      neat.species.DefaultSpeciesSet,
@@ -44,7 +44,7 @@ class AttentionNEATConfig:
 
 
 class SelfAttentionConfig:
-    IMAGE_SHAPE = (16, 16, 3)
+    IMAGE_SHAPE = (18, 18, 4)
     PATCH_SIZE = 1
     PATCH_STRIDE = 1
     TRANSFORMER_D = 4
