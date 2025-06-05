@@ -55,9 +55,9 @@ def eval_fitness(genome, config, candidate_params=None):
         step = 0
         done = False
 
-        MAX_STEPS = 500 # Prevent infinite loops
+        MAX_STEPS = 200 # Prevent infinite loops
 
-        while not done:
+        while not done and step < MAX_STEPS:
             action, new_ob = get_action(net, ob)
             ob, reward, done, trunc, info = env.step(action)
             if trunc:
