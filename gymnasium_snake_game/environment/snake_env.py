@@ -17,17 +17,20 @@ class SnakeEnv(gymnasium.Env):
         self.snake.init()
         if self.render_mode == "human":
             self._render_frame()
-        return self._get_obs(), self._get_info()
+        return self._get_inputs(), self._get_info() #self._get_obs(), self._get_info()
 
     def step(self, action):
         s, r, d, t = self.snake.step(action)
         if self.render_mode == "human":
             self._render_frame()
-        return s, r, d, t, self._get_info()
+        return self.snake.get_inputs(), r, d, t, self._get_info()
 
     def _get_obs(self):
         return self.snake.observation()
 
+    def _get_inputs(self):
+        return self.snake.get_inputs()
+    
     def _get_info(self):
         return self.snake.info()
 

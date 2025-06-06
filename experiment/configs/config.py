@@ -28,12 +28,12 @@ env = gym.make('Snake-v1', render_mode="human")
 np.set_printoptions(linewidth=100)
 
 BASE_DIR = 'experiment/'
-CPU_COUNT = 6
+CPU_COUNT = 1
 
 
 class AttentionNEATConfig:
     ACTIVATION = 'sigmoid'
-    GENERATIONS = 5000
+    GENERATIONS = 10
     TEST = 10
     TRIALS = 1
     NEAT_CONFIG = neat.config.Config(neat.genome.DefaultGenome,

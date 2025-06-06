@@ -168,3 +168,78 @@ class Snake:
                 total_r = 0
                 self.fps = fps
             update_screen(screen, self, True)
+
+    ### ADDED ###
+    def get_inputs(self):
+        def look_to(direction, position, matrix):
+            x, y = position
+            dx, dy = direction
+            dist = 0
+            food_found = False
+            tail_found = False
+            wall_found = False
+
+            width, height = matrix.shape[0], matrix.shape[1]
+            while 0 <= x < width-1 and 0 <= y < height-1:
+                x += dx
+                y += dy
+                dist += 1
+                if not wall_found and matrix[x, y, 3] == 1:
+                    wall = dist
+                    wall_found = True
+                if not food_found and matrix[x, y, 2] == 1:
+                    food = dist
+                    food_found = True
+                if not tail_found and matrix[x, y, 1] == 1:
+                    tail = dist
+                    tail_found = True
+                if wall_found and food_found and tail_found:
+                    break
+
+            if not wall_found:
+                wall = float('inf')
+            if not food_found:
+                food = float('inf')
+            if not tail_found:
+                tail = float('inf')
+            return wall, food, tail
+
+        matrix = self.observation()
+        position = (self.head.x + 1, self.head.y + 1)  # +1 because obs has padding
+        orientation = Direction.step(self.direction)
+
+        features = []
+        directions = [
+            orientation,
+            self.left(orientation),
+            self.right(orientation),
+            self.semi_left(orientation),
+            self.semi_left(self.left(orientation)),
+            self.semi_right(orientation),
+            self.semi_right(self.right(orientation)),
+        ]
+
+        for dir_vec in directions:
+            features.extend(look_to(dir_vec, position, matrix))
+
+        return features
+
+    @staticmethod
+    def left(direction):
+        dx, dy = direction
+        return -dy, dx
+
+    @staticmethod
+    def right(direction):
+        dx, dy = direction
+        return dy, -dx
+
+    @staticmethod
+    def semi_left(direction):
+        dx, dy = direction
+        return dx - dy, dy + dx
+
+    @staticmethod
+    def semi_right(direction):
+        dx, dy = direction
+        return dx + dy, dy - dx
