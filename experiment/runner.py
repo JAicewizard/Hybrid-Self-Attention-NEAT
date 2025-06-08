@@ -42,8 +42,8 @@ def get_action(net, ob):
     #new_ob = np.argmax(new_ob, axis=1)
     # print(new_ob.shape)
     new_ob = ob
+    #print(ob)
     action = net.activate(new_ob)
-    print(new_ob, action)
     action = process_action(action)
     return action
 
@@ -61,15 +61,15 @@ def eval_fitness(genome, config, candidate_params=None):
         step = 0
         done = False
 
-        MAX_STEPS = 1000 # Prevent infinite loops
+        MAX_STEPS = 20000 # Prevent infinite loops
 
-        while not done and step < MAX_STEPS:
+        while not done and step<MAX_STEPS:
             action = get_action(net, ob)
             ob, reward, done, trunc, info = env.step(action)
             if trunc:
                 env.reset()
             step += 1
-            total_reward += reward+0.1
+            total_reward += reward #+0.1
             #print(total_reward)
             #env.render()
 

@@ -37,6 +37,8 @@ class Snake:
         self.body_color = body_color
         self.background_color = background_color
         self.food = Food(self.blocks_x, self.blocks_y, food_color)
+        self.visited = set()  # Track visited positions for loop detection
+        
         Block.size = block_size
 
         self.screen = None
@@ -46,7 +48,8 @@ class Snake:
     def init(self):
         self.episode += 1
         self.score = 0
-        self.direction = 3
+        # Initialize direction to a known value, e.g., Right (3) for the snake to move initially
+        self.direction = 3 
         self.current_step = 0
         self.head = Block(self.blocks_x//2, self.blocks_y//2, self.head_color)
         self.body = [self.head.copy(i, 0, self.body_color)
@@ -68,39 +71,90 @@ class Snake:
         update_screen(self.screen, self)
         handle_input()
 
-    def step(self, direction):
-        if direction is None:
-            direction = self.direction
-        self.current_step += 1
-        truncated = True if self.current_step == self.max_step else False
-        (x, y) = (self.head.x, self.head.y)
-        step = Direction.step(direction)
-        if (direction == 0 or direction == 1) and (self.direction == 0 or self.direction == 1):
-            step = Direction.step(self.direction)
-        elif (direction == 2 or direction == 3) and (self.direction == 2 or self.direction == 3):
-            step = Direction.step(self.direction)
+    def step(self, action): # Renamed 'direction' to 'action' for clarity
+        # action is expected to be an integer: 0 for Straight, 1 for Left, 2 for Right
+        if action is None:
+            # If no action is provided (e.g., at the very start or for human input)
+            # just continue in the current direction.
+            new_direction = self.direction 
         else:
-            self.direction = direction
-        self.head.x += step[0]
-        self.head.y += step[1]
+            current_direction_vec = Direction.step(self.direction)
+            
+            if action == 0:  # Go Straight
+                new_direction_vec = current_direction_vec
+            elif action == 1:  # Turn Left
+                new_direction_vec = Snake.left(current_direction_vec)
+            elif action == 2:  # Turn Right
+                new_direction_vec = Snake.right(current_direction_vec)
+            else:
+                # Handle unexpected action, e.g., default to straight or raise error
+                print(f"Warning: Unexpected action value: {action}. Defaulting to straight.")
+                new_direction_vec = current_direction_vec
 
-        reward = self.living_bonus + self.calc_reward()
+            # Convert the new direction vector back to your internal direction integer (0-3)
+            # You'll need to define a mapping for Direction.step() for this.
+            # Assuming Direction.step(0)=(0,1), Direction.step(1)=(0,-1), Direction.step(2)=(-1,0), Direction.step(3)=(1,0)
+            if new_direction_vec == (0, 1): # Up
+                new_direction = 0
+            elif new_direction_vec == (0, -1): # Down
+                new_direction = 1
+            elif new_direction_vec == (-1, 0): # Left
+                new_direction = 2
+            elif new_direction_vec == (1, 0): # Right
+                new_direction = 3
+            else:
+                # This should ideally not happen if left/right are properly implemented
+                new_direction = self.direction # Fallback
+
+
+        self.current_step += 1
+        truncated = self.current_step == self.max_step
+
+        (x, y) = (self.head.x, self.head.y)
+        
+        # Apply the new direction
+        # The previous 'if (direction in [0, 1] ...)' block for preventing reversing is no longer needed
+        # because the relative movement naturally prevents 180-degree turns.
+        self.direction = new_direction # Update the internal direction
+
+        step_vec = Direction.step(self.direction) # Get the (dx, dy) for the new direction
+
+        self.head.x += step_vec[0]
+        self.head.y += step_vec[1]
+
+        reward = 0.01  # baseline movement reward
         dead = False
 
+        # Loop detection
+        pos = (self.head.x, self.head.y)
+        if pos in self.visited:
+            reward -= 0.25  # Penalize for looping
+        else:
+            self.visited.add(pos)
+        
+        # Eat food
         if self.head == self.food.block:
             self.score += 1
             self.grow(x, y)
             self.food.new_food(self.blocks)
-            reward = self.food_reward
+            self.visited = set()
+            reward += 5.0
         else:
             self.move(x, y)
+
+            # Near food bonus
+            dist = abs(self.head.x - self.food.block.x) + abs(self.head.y - self.food.block.y)
+            if dist == 1:
+                reward += 0.2
+
+            # Check collision with body or wall
             for block in self.body:
                 if self.head == block:
                     dead = True
-            if self.head.x >= self.blocks_x or self.head.x < 0 or self.head.y < 0 or self.head.y >= self.blocks_x:
+            if self.head.x >= self.blocks_x or self.head.x < 0 or \
+            self.head.y >= self.blocks_y or self.head.y < 0:
                 dead = True
-        if dead:
-            reward = self.death_penalty
+
         return self.observation(), reward, dead, truncated
 
     def observation(self):
@@ -111,12 +165,16 @@ class Snake:
             if 0 <= block.x < self.blocks_x and 0 <= block.y < self.blocks_y:
                 obs[block.x+1][block.y+1][1] = 1
         obs[self.food.block.x+1][self.food.block.y+1][2] = 1
-        for x in range(self.blocks_x+2):
-            obs[x][0][3]=1
-            obs[x][self.blocks_y+1][3]=1
-        for y in range(self.blocks_y+2):
-            obs[y][self.blocks_x+1][3]=1
-            obs[y][0][3]=1
+        # top and bottom rows (rows are first index)
+        for x in range(self.blocks_y + 2):  # columns
+            obs[0][x][3] = 1                # top row
+            obs[self.blocks_x + 1][x][3] = 1  # bottom row
+
+        # left and right columns (columns are second index)
+        for y in range(self.blocks_x + 2):  # rows
+            obs[y][0][3] = 1                # left column
+            obs[y][self.blocks_y + 1][3] = 1  # right column
+
         return obs
 
     def calc_reward(self):
@@ -158,7 +216,9 @@ class Snake:
 
         while pygame.get_init():
             clock.tick(self.fps)
-            _, r, d, _ = self.step(handle_input())
+            # For human playing, handle_input() should return the desired relative action (0, 1, or 2)
+            # You might need to adjust handle_input() to return these values based on arrow keys.
+            _, r, d, _ = self.step(handle_input()) 
             total_r += r
             if acceleration and total_r == frep:
                 self.fps += step
@@ -171,75 +231,110 @@ class Snake:
 
     ### ADDED ###
     def get_inputs(self):
-        def look_to(direction, position, matrix):
-            x, y = position
-            dx, dy = direction
+        matrix = self.observation() # This is (blocks_x+2, blocks_y+2, 4)
+        MAX_DIST = self.blocks_x
+
+        def look_to(direction_vec, head_pos_in_matrix, matrix):
+            current_x, current_y = head_pos_in_matrix[0], head_pos_in_matrix[1]
+            dx, dy = direction_vec  
+
             dist = 0
             food_found = False
-            tail_found = False
+            tail_found = False 
             wall_found = False
 
-            width, height = matrix.shape[0], matrix.shape[1]
-            while 0 <= x < width-1 and 0 <= y < height-1:
-                x += dx
-                y += dy
-                dist += 1
-                if not wall_found and matrix[x, y, 3] == 1:
+            max_x_idx, max_y_idx = matrix.shape[0], matrix.shape[1]
+
+            wall = food = tail = None
+            
+            current_x += dx
+            current_y += dy
+            dist += 1 # Distance starts at 1 for the first cell checked
+
+            # Loop while within the padded observation boundaries
+            while 0 <= current_x < max_x_idx and 0 <= current_y < max_y_idx:
+                # Channel 3: Walls
+                if not wall_found and matrix[current_x, current_y, 3] == 1.0:
                     wall = dist
                     wall_found = True
-                if not food_found and matrix[x, y, 2] == 1:
+                # Channel 2: Food
+                if not food_found and matrix[current_x, current_y, 2] == 1.0:
                     food = dist
                     food_found = True
-                if not tail_found and matrix[x, y, 1] == 1:
+                # Channel 1: Body/Tai
+                if not tail_found and matrix[current_x, current_y, 1] == 1.0:
                     tail = dist
                     tail_found = True
+                
+                # If all found, we can stop looking in this direction
                 if wall_found and food_found and tail_found:
                     break
 
-            if not wall_found:
-                wall = float('inf')
-            if not food_found:
-                food = float('inf')
-            if not tail_found:
-                tail = float('inf')
+                # Move to the next cell in the current direction
+                current_x += dx
+                current_y += dy
+                dist += 1
+
+            # Assign MAX_DIST if nothing was found in that direction
+            if wall is None:
+                wall = MAX_DIST
+            if food is None:
+                food = MAX_DIST
+            if tail is None:
+                tail = MAX_DIST
+
             return wall, food, tail
 
-        matrix = self.observation()
-        position = (self.head.x + 1, self.head.y + 1)  # +1 because obs has padding
-        orientation = Direction.step(self.direction)
+        # The head's position in the padded observation matrix: (x+1, y+1)
+        # So it directly maps to matrix[x_coord, y_coord]
+        head_pos_in_matrix = (self.head.x+1, self.head.y+1) 
+
+        # Get the current orientation vector (dx, dy)
+        orientation = Direction.step(self.direction) 
 
         features = []
+        # The 7 directions for 21 inputs:
         directions = [
-            orientation,
-            self.left(orientation),
-            self.right(orientation),
-            self.semi_left(orientation),
-            self.semi_left(self.left(orientation)),
-            self.semi_right(orientation),
-            self.semi_right(self.right(orientation)),
+            orientation,                              # Straight ahead
+            self.left(orientation),                   # 90 degrees left
+            self.right(orientation),                  # 90 degrees right
+            self.semi_left(orientation),              # 45 degrees left diagonal
+            self.semi_right(orientation),             # 45 degrees right diagonal
+            self.semi_left(self.left(orientation)),   # 135 degrees left (back-left diagonal)
+            self.semi_right(self.right(orientation)), # 135 degrees right (back-right diagonal)
         ]
 
         for dir_vec in directions:
-            features.extend(look_to(dir_vec, position, matrix))
+            wall_dist, food_dist, tail_dist = look_to(dir_vec, head_pos_in_matrix, matrix)
+            
+            # Normalize distances to be between 0 and 1, where 1 means close, 0 means far
+            # Using 1 - (dist / MAX_DIST) is common for this
+            features.extend([
+                1.0 - (wall_dist / MAX_DIST), 
+                1.0 - (food_dist / MAX_DIST), 
+                1.0 - (tail_dist / MAX_DIST)
+            ])
 
         return features
 
     @staticmethod
-    def left(direction):
-        dx, dy = direction
-        return -dy, dx
+    def left(direction_vec):
+        dx, dy = direction_vec
+        return dy, -dx 
 
     @staticmethod
-    def right(direction):
-        dx, dy = direction
-        return dy, -dx
+    def right(direction_vec):
+        dx, dy = direction_vec
+        return -dy, dx 
+    
+    @staticmethod
+    def semi_left(direction_vec):
+        dx, dy = direction_vec
+        ldx, ldy = Snake.left(direction_vec)
+        return (dx + ldx, dy + ldy)
 
     @staticmethod
-    def semi_left(direction):
-        dx, dy = direction
-        return dx - dy, dy + dx
-
-    @staticmethod
-    def semi_right(direction):
-        dx, dy = direction
-        return dx + dy, dy - dx
+    def semi_right(direction_vec):
+        dx, dy = direction_vec
+        rdx, rdy = Snake.right(direction_vec)
+        return (dx + rdx, dy + rdy)

@@ -1,13 +1,13 @@
 [NEAT]
-fitness_criterion     = max
-fitness_threshold     = 5000
-pop_size              = 2000
+fitness_criterion     = mean
+fitness_threshold     = 1000
+pop_size              = 200
 reset_on_extinction   = True
 
 [DefaultGenome]
 # node activation options
 activation_default      = sigmoid
-activation_mutate_rate  = 0.2
+activation_mutate_rate  = 0.05
 activation_options      = sigmoid
 
 # node aggregation options
@@ -36,8 +36,8 @@ conn_delete_prob        = 0.146
 enabled_default         = True
 enabled_mutate_rate     = 0.01
 
-feed_forward            = False
-initial_connection      = full_nodirect
+feed_forward            = True
+initial_connection      = unconnected
 
 # node add/remove rates
 node_add_prob           = 0.085
@@ -46,14 +46,14 @@ node_delete_prob        = 0.0352
 # network parameters
 num_hidden              = 0
 num_inputs              = 21
-num_outputs             = 4
+num_outputs             = 3
 
 # node response options
 response_init_mean      = 1.0
 response_init_stdev     = 0.0
 response_max_value      = 30.0
 response_min_value      = -30.0
-response_mutate_power   = 0.0
+response_mutate_power   = 0.1
 response_mutate_rate    = 0.1
 response_replace_rate   = 0.0
 
@@ -70,7 +70,7 @@ weight_replace_rate     = 0.0245
 compatibility_threshold = 3.0
 
 [DefaultStagnation]
-species_fitness_func = median
+species_fitness_func = mean
 max_stagnation       = 15
 species_elitism      = 2
 
