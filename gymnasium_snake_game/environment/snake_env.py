@@ -17,7 +17,7 @@ class SnakeEnv(gymnasium.Env):
         self.snake.init()
         if self.render_mode == "human":
             self._render_frame()
-        return self._get_inputs(), self._get_info() #self._get_obs(), self._get_info()
+        return self._get_obs(), self._get_info() #self._get_obs(), self._get_info()
 
     def step(self, action):
         s, r, d, t = self.snake.step(action)

@@ -37,15 +37,15 @@ def get_action(net, ob):
     # top = runner.attention_model.get_output(ob)
     # new_ob = runner.attention_model.normalize_patch_centers(top)
     # new_ob = np.append(new_ob, [1.0])
-    #new_ob = np.vstack(ob)
+    # print(ob.shape)
+    new_ob = np.vstack(ob)
     # print(new_ob.shape)
-    #new_ob = np.argmax(new_ob, axis=1)
+    new_ob = np.argmax(new_ob, axis=1)
     # print(new_ob.shape)
-    new_ob = ob
-    #print(ob)
     action = net.activate(new_ob)
     action = process_action(action)
     return action
+
 
 
 def eval_fitness(genome, config, candidate_params=None):
