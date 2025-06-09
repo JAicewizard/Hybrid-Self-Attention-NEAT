@@ -7,14 +7,15 @@ class Snake:
     def __init__(
         self,
         fps=60,
-        max_step=200,
+        max_step=9999,
         init_length=4,
         food_reward=1.0,
         dist_reward=0.0,
         living_bonus=0.0,
         death_penalty=0.0,
-        width=10,
-        height=10,
+        init_hunger=100,
+        width=20,
+        height=20,
         block_size=20,
         background_color=Color.black,
         food_color=Color.green,
@@ -38,7 +39,8 @@ class Snake:
         self.background_color = background_color
         self.food = Food(self.blocks_x, self.blocks_y, food_color)
         self.visited = set()  # Track visited positions for loop detection
-        self.hunger=100
+        self.init_hunger = init_hunger
+        self.hunger=init_hunger
         Block.size = block_size
 
         self.screen = None
@@ -56,7 +58,7 @@ class Snake:
                      for i in range(-self.init_length, 0)]
         self.blocks = [self.food.block, self.head, *self.body]
         self.food.new_food(self.blocks)
-        self.hunger = 100
+        self.hunger = self.init_hunger
 
     def close(self):
         pygame.quit()
@@ -141,10 +143,11 @@ class Snake:
             self.food.new_food(self.blocks)
             self.visited = set()
             reward += 5.0
-            self.hunger=100
+            self.hunger=self.init_hunger
         else:
             if self.hunger==0:
                 dead = True 
+                print('starved')
             else:
                 self.hunger-=1
                 
@@ -159,10 +162,11 @@ class Snake:
             for block in self.body:
                 if self.head == block:
                     dead = True
+                    print('wall')
             if self.head.x >= self.blocks_x or self.head.x < 0 or \
             self.head.y >= self.blocks_y or self.head.y < 0:
                 dead = True
-
+                print('tail')
         return self.observation(), reward, dead, truncated
 
     def observation(self):
@@ -346,3 +350,56 @@ class Snake:
         dx, dy = direction_vec
         rdx, rdy = Snake.right(direction_vec)
         return (dx + rdx, dy + rdy)
+    
+    def render_image(self):
+        """
+        Renders the current game state as a Pygame surface and returns it.
+        The image will have the snake in white, food in green, and a black background.
+        """
+        # Ensure Pygame is initialized
+        if not pygame.get_init():
+            pygame.init()
+
+        # Calculate screen dimensions
+        screen_width = self.blocks_x * Block.size
+        screen_height = self.blocks_y * Block.size
+
+        # Create a surface for rendering
+        image_surface = pygame.Surface((screen_width, screen_height))
+        # FIX: Removed .value here
+        image_surface.fill(self.background_color) # Fill background with black
+
+        # Draw food
+        food_rect = pygame.Rect(
+            self.food.block.x * Block.size,
+            self.food.block.y * Block.size,
+            Block.size,
+            Block.size
+        )
+        # FIX: Removed .value here
+        pygame.draw.rect(image_surface, self.food_color, food_rect)
+
+        # Draw snake body
+        for i, block in enumerate(self.body):
+            if block == self.head:
+                continue 
+            body_rect = pygame.Rect(
+                block.x * Block.size,
+                block.y * Block.size,
+                Block.size,
+                Block.size
+            )
+            # FIX: Removed .value here
+            pygame.draw.rect(image_surface, self.body_color, body_rect)
+
+        # Draw snake head (on top of body if overlap)
+        head_rect = pygame.Rect(
+            self.head.x * Block.size,
+            self.head.y * Block.size,
+            Block.size,
+            Block.size
+        )
+        # FIX: Removed .value here
+        pygame.draw.rect(image_surface, self.head_color, head_rect)
+
+        return image_surface

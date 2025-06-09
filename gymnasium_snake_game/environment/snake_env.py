@@ -25,6 +25,8 @@ class SnakeEnv(gymnasium.Env):
             self._render_frame()
         return self.snake.get_inputs(), r, d, t, self._get_info()
 
+    def render(self):
+        return self.snake.render_image()
     def _get_obs(self):
         return self.snake.observation()
 
