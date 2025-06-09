@@ -33,7 +33,7 @@ CPU_COUNT = 6
 
 class AttentionNEATConfig:
     ACTIVATION = 'sigmoid'
-    GENERATIONS = 500
+    GENERATIONS = 100
     TEST = 1
     TRIALS = 2
     NEAT_CONFIG = neat.config.Config(neat.genome.DefaultGenome,

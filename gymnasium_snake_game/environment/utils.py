@@ -74,11 +74,11 @@ class Direction:
             case 0:
                 return Direction.up
             case 1:
-                return Direction.down
-            case 2:
                 return Direction.left
-            case 3:
+            case 2:
                 return Direction.right
+            case 3:
+                return Direction.down
 
 
 def normalize(x, y):

@@ -56,6 +56,7 @@ class Snake:
                      for i in range(-self.init_length, 0)]
         self.blocks = [self.food.block, self.head, *self.body]
         self.food.new_food(self.blocks)
+        self.hunger = 100
 
     def close(self):
         pygame.quit()
@@ -94,16 +95,17 @@ class Snake:
             # Convert the new direction vector back to your internal direction integer (0-3)
             # You'll need to define a mapping for Direction.step() for this.
             # Assuming Direction.step(0)=(0,1), Direction.step(1)=(0,-1), Direction.step(2)=(-1,0), Direction.step(3)=(1,0)
-            if new_direction_vec == (0, 1): # Up
+            if new_direction_vec == (0, -1): # Up
                 new_direction = 0
-            elif new_direction_vec == (0, -1): # Down
-                new_direction = 1
             elif new_direction_vec == (-1, 0): # Left
-                new_direction = 2
+                new_direction = 1
             elif new_direction_vec == (1, 0): # Right
+                new_direction = 2
+            elif new_direction_vec == (0, 1): # Down
                 new_direction = 3
             else:
                 # This should ideally not happen if left/right are properly implemented
+                print("test")
                 new_direction = self.direction # Fallback
 
 
