@@ -35,7 +35,7 @@ class AttentionNEATConfig:
     ACTIVATION = 'sigmoid'
     GENERATIONS = 500
     TEST = 1
-    TRIALS = 1
+    TRIALS = 2
     NEAT_CONFIG = neat.config.Config(neat.genome.DefaultGenome,
                                      neat.reproduction.DefaultReproduction,
                                      neat.species.DefaultSpeciesSet,
