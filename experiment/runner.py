@@ -60,12 +60,11 @@ def eval_fitness(genome, config, candidate_params=None):
         total_reward = 0
         step = 0
         done = False
-
-        MAX_STEPS = 20000 # Prevent infinite loops
-
-        while not done and step<MAX_STEPS:
+        
+        while not done:
             action = get_action(net, ob)
             ob, reward, done, trunc, info = env.step(action)
+                
             if trunc:
                 env.reset()
             step += 1

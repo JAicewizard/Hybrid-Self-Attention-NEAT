@@ -12,7 +12,7 @@ class Snake:
         food_reward=1.0,
         dist_reward=0.0,
         living_bonus=0.0,
-        death_penalty=-10.0,
+        death_penalty=0.0,
         width=10,
         height=10,
         block_size=20,
@@ -38,7 +38,7 @@ class Snake:
         self.background_color = background_color
         self.food = Food(self.blocks_x, self.blocks_y, food_color)
         self.visited = set()  # Track visited positions for loop detection
-        
+        self.hunger=100
         Block.size = block_size
 
         self.screen = None
@@ -139,7 +139,13 @@ class Snake:
             self.food.new_food(self.blocks)
             self.visited = set()
             reward += 5.0
+            self.hunger=100
         else:
+            if self.hunger==0:
+                dead = True 
+            else:
+                self.hunger-=1
+                
             self.move(x, y)
 
             # Near food bonus
@@ -310,11 +316,11 @@ class Snake:
             # Normalize distances to be between 0 and 1, where 1 means close, 0 means far
             # Using 1 - (dist / MAX_DIST) is common for this
             features.extend([
-                1.0 - (wall_dist / MAX_DIST), 
-                1.0 - (food_dist / MAX_DIST), 
-                1.0 - (tail_dist / MAX_DIST)
+                wall_dist, 
+                food_dist, 
+                tail_dist
             ])
-
+        
         return features
 
     @staticmethod
