@@ -28,7 +28,7 @@ env = gym.make('Snake-v1', render_mode="human")
 np.set_printoptions(linewidth=100)
 
 BASE_DIR = 'experiment/'
-CPU_COUNT = 6
+CPU_COUNT = 1
 
 
 class AttentionNEATConfig:
@@ -44,11 +44,11 @@ class AttentionNEATConfig:
 
 
 class SelfAttentionConfig:
-    IMAGE_SHAPE = (18, 18, 4)
+    IMAGE_SHAPE = (12, 12, 4)
     PATCH_SIZE = 1
     PATCH_STRIDE = 1
     TRANSFORMER_D = 4
-    TOP_K = 16
+    TOP_K = 20
 
 
 class CMAESConfig:

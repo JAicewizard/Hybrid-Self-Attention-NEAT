@@ -34,17 +34,12 @@ class AttentionNEATModule(BaseAttentionRunnerModule):
 
 
 def get_action(net, ob):
-    # top = runner.attention_model.get_output(ob)
-    # new_ob = runner.attention_model.normalize_patch_centers(top)
-    # new_ob = np.append(new_ob, [1.0])
-    # print(ob.shape)
-    new_ob = np.vstack(ob)
-    # print(new_ob.shape)
-    new_ob = np.argmax(new_ob, axis=1)
-    # print(new_ob.shape)
+    top = runner.attention_model.get_output(ob)
+    new_ob = runner.attention_model.normalize_patch_centers(top)
+    new_ob = np.append(new_ob, [1.0])
     action = net.activate(new_ob)
     action = process_action(action)
-    return action
+    return action, top
 
 
 
@@ -62,7 +57,7 @@ def eval_fitness(genome, config, candidate_params=None):
         done = False
         
         while not done:
-            action = get_action(net, ob)
+            action, new_ob = get_action(net, ob)
             ob, reward, done, trunc, info = env.step(action)
                 
             if trunc:

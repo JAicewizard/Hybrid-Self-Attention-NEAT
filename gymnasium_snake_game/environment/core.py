@@ -51,7 +51,7 @@ class Snake:
         self.episode += 1
         self.score = 0
         # Initialize direction to a known value, e.g., Right (3) for the snake to move initially
-        self.direction = 3 
+        self.direction = 2
         self.current_step = 0
         self.head = Block(self.blocks_x//2, self.blocks_y//2, self.head_color)
         self.body = [self.head.copy(i, 0, self.body_color)
@@ -162,11 +162,11 @@ class Snake:
             for block in self.body:
                 if self.head == block:
                     dead = True
-                    #print('wall')
+                    #print('tail', self.current_step)
             if self.head.x >= self.blocks_x or self.head.x < 0 or \
             self.head.y >= self.blocks_y or self.head.y < 0:
                 dead = True
-                #print('tail')
+                #print('wall')
         return self.observation(), reward, dead, truncated
 
     def observation(self):
