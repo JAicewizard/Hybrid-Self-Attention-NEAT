@@ -107,7 +107,7 @@ class Snake:
                 new_direction = 3
             else:
                 # This should ideally not happen if left/right are properly implemented
-                print("test")
+                #print("test")
                 new_direction = self.direction # Fallback
 
 
@@ -147,7 +147,7 @@ class Snake:
         else:
             if self.hunger==0:
                 dead = True 
-                print('starved')
+                #print('starved')
             else:
                 self.hunger-=1
                 
@@ -162,11 +162,11 @@ class Snake:
             for block in self.body:
                 if self.head == block:
                     dead = True
-                    print('wall')
+                    #print('wall')
             if self.head.x >= self.blocks_x or self.head.x < 0 or \
             self.head.y >= self.blocks_y or self.head.y < 0:
                 dead = True
-                print('tail')
+                #print('tail')
         return self.observation(), reward, dead, truncated
 
     def observation(self):
