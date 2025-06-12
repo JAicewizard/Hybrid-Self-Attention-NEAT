@@ -28,7 +28,7 @@ env = gym.make('Snake-v1', render_mode="human")
 np.set_printoptions(linewidth=100)
 
 BASE_DIR = 'experiment/'
-CPU_COUNT = 1
+CPU_COUNT = 6
 
 
 class AttentionNEATConfig:
