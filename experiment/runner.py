@@ -11,7 +11,30 @@ from parallel import ParallelEvaluator
 from self_attention import SelfAttention
 from utility import process_action, initial_population
 
+import csv
+from datetime import datetime
 
+LOG_FILE = os.path.join(BASE_DIR, 'training_log.csv')
+
+# Initialize CSV log file
+if not os.path.isfile(LOG_FILE):
+    with open(LOG_FILE, 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(['Timestamp', 'Phase', 'Generation', 'Trial', 'Reward', 'ExecutionTime'])  # Headers
+        
+        
+def log_to_csv(phase, generation, trial, reward, exec_time):
+    with open(LOG_FILE, 'a', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow([
+            datetime.now().isoformat(timespec='seconds'),
+            phase,
+            generation,
+            trial,
+            reward,
+            f"{exec_time:.3f}"
+        ])
+        
 class AttentionNEATModule(BaseAttentionRunnerModule):
     def __init__(self):
         super(AttentionNEATModule, self).__init__()
@@ -90,7 +113,9 @@ def test(genome):
         print('\n######################################################\n')
         score_list.append(score)
         time_list.append(end - start)
-
+        
+        log_to_csv("Test", "-", i + 1, score, exec_time)
+        
     print('Mean Execution time: {0:.3f} sec'.format(np.array(time_list).mean()))
     print('Mean Test Fitness: {0:.3f}'.format(np.array(score_list).mean()))
 
