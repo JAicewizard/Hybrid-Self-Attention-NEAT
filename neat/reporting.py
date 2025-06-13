@@ -6,7 +6,10 @@ may do something else such as checkpointing, or may do both.
 from __future__ import division, print_function
 
 import time
-
+import csv
+import os
+from datetime import datetime
+            
 from neat.math_util import mean, stdev
 from neat.six_util import itervalues, iterkeys
 
@@ -159,3 +162,43 @@ class StdOutReporter(BaseReporter):
 
     def info(self, msg):
         print(msg)
+
+class CSVReporter(BaseReporter):
+    def __init__(self, log_path='training_log.csv'):
+        self.log_path = log_path
+        self.generation_start_time = None
+
+        # Initialize log file with headers
+        if not os.path.exists(self.log_path):
+            with open(self.log_path, mode='w', newline='') as f:
+                writer = csv.writer(f)
+                writer.writerow([
+                    'Timestamp', 'Generation', 'NumSpecies', 'AvgFitness', 'StdFitness',
+                    'BestFitness', 'BestGenomeSize', 'BestSpeciesID', 'GenerationTime'
+                ])
+
+    def start_generation(self, generation):
+        self.generation = generation
+        self.generation_start_time = time.time()
+
+    def post_evaluate(self, config, population, species, best_genome):
+        fitnesses = [c.fitness for c in itervalues(population)]
+        fit_mean = mean(fitnesses)
+        fit_std = stdev(fitnesses)
+        best_species_id = species.get_species_id(best_genome.key)
+        elapsed = time.time() - self.generation_start_time
+
+        # Write to CSV
+        with open(self.log_path, mode='a', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow([
+                datetime.now().isoformat(timespec='seconds'),
+                self.generation,
+                len(species.species),
+                f"{fit_mean:.5f}",
+                f"{fit_std:.5f}",
+                f"{best_genome.fitness:.5f}",
+                best_genome.size(),
+                best_species_id,
+                f"{elapsed:.3f}"
+            ])

@@ -7,6 +7,7 @@ def initial_population(state, stats, config, output):
     population = neat.population.Population(config, [], [], state)
     if output:
         population.add_reporter(neat.reporting.StdOutReporter(True))
+        population.add_reporter(neat.reporting.CSVReporter())
     population.add_reporter(stats)
     return population
 
