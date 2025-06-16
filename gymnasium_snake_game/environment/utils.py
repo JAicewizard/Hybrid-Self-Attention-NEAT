@@ -2,7 +2,7 @@ import pygame
 import math
 
 from random import randint
-
+import random
 
 class Food:
     def __init__(self, blocks_x, blocks_y, color) -> None:

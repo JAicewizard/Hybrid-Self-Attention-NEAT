@@ -1,7 +1,7 @@
 import math
 import numpy as np
 from .utils import *
-
+import random
 
 class Snake:
     def __init__(
@@ -46,8 +46,9 @@ class Snake:
         self.screen = None
         self.clock = None
         self.human_playing = False
-
-    def init(self):
+        self.seed= None
+        
+    def init(self):           
         self.episode += 1
         self.score = 0
         # Initialize direction to a known value, e.g., Right (3) for the snake to move initially
@@ -59,6 +60,10 @@ class Snake:
         self.blocks = [self.food.block, self.head, *self.body]
         self.food.new_food(self.blocks)
         self.hunger = self.init_hunger
+        
+    def set_seed(self, seed):
+        self.seed = seed
+        random.seed(self.seed)
 
     def close(self):
         pygame.quit()

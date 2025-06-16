@@ -12,12 +12,12 @@ class ParallelEvaluator(neat.parallel.ParallelEvaluator):
         self.pool.close()
         self.pool.join()
 
-    def evaluate_cmaes_for_attention(self, best_genome, config):
+    def evaluate_cmaes_for_attention(self, best_genome, config,z):
         candidate_fitness, jobs = [], []
         pops = self.cmaes.get_population()
 
         for candidate_params in pops:
-            jobs.append(self.pool.apply_async(self.eval_function, (best_genome, config, candidate_params)))
+            jobs.append(self.pool.apply_async(self.eval_function, (best_genome, config, z,candidate_params)))
 
         for job in jobs:
             candidate_fitness.append(job.get(timeout=self.timeout))

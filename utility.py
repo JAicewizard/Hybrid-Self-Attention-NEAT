@@ -2,6 +2,7 @@ import numpy as np
 
 import neat
 
+generations_counter = 0
 
 def initial_population(state, stats, config, output):
     population = neat.population.Population(config, [], [], state)
