@@ -44,7 +44,7 @@ def get_action(net, ob):
     #print(ob)
     action = net.activate(new_ob)
     action = process_action(action)
-    return action, top
+    return action
 
 def eval_fitness(genome, config, seed, candidate_params=None):
     
