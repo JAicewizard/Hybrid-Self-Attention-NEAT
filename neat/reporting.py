@@ -164,8 +164,8 @@ class StdOutReporter(BaseReporter):
         print(msg)
 
 class CSVReporter(BaseReporter):
-    def __init__(self, log_path='training_log.csv'):
-        self.log_path = log_path
+    def __init__(self, fitness, log_path='training_log'):
+        self.log_path = log_path+f"_{fitness}.csv"
         self.generation_start_time = None
 
         # Initialize log file with headers
