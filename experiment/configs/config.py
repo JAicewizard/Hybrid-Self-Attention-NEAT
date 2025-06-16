@@ -11,6 +11,7 @@ import gymnasium_snake_game
 
 import os
 import random 
+import logging
 
 print(gymnasium_snake_game.__file__)
 
@@ -24,8 +25,8 @@ if not sys.warnoptions:
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
-env = gym.make('Snake-v1', render_mode="human")
-#env = gym.make('Snake-v1', render_mode=None)
+#env = gym.make('Snake-v1', render_mode="human")
+env = gym.make('Snake-v1', render_mode=None)
 np.set_printoptions(linewidth=100)
 
 BASE_DIR = 'experiment/'
@@ -34,7 +35,7 @@ CPU_COUNT = 6
 
 class AttentionNEATConfig:
     ACTIVATION = 'sigmoid'
-    GENERATIONS = 5
+    GENERATIONS = 100
     TEST = 1
     TRIALS = 2
     NEAT_CONFIG = neat.config.Config(neat.genome.DefaultGenome,
