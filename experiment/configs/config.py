@@ -10,6 +10,7 @@ import neat
 import gymnasium_snake_game
 
 import os
+import random 
 
 print(gymnasium_snake_game.__file__)
 
