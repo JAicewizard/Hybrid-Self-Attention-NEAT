@@ -399,7 +399,6 @@ class Snake:
         pygame.draw.rect(image_surface, self.head_color, head_rect)
 
         return image_surface
-<<<<<<< HEAD
     
 # Define the Fitness class
 class Fitness:
@@ -446,5 +445,3 @@ class Fitness:
             if dist == 1:
                 reward += 0.2
         return reward
-=======
->>>>>>> 6a07895d9752a5cee1de5310d346dd40ec2be81e
