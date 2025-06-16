@@ -13,7 +13,7 @@ class Snake:
         dist_reward=0.0,
         living_bonus=0.0,
         death_penalty=0.0,
-        init_hunger=1000,
+        init_hunger=100,
         width=10,
         height=10,
         block_size=20,

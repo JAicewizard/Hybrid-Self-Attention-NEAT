@@ -1,0 +1,3 @@
+Timestamp,Generation,NumSpecies,AvgFitness,StdFitness,BestFitness,BestGenomeSize,BestSpeciesID,GenerationTime
+2025-06-16T18:43:47,0,1,-1.08125,0.10662,-0.47500,"(3, 0)",1,7.910
+2025-06-16T18:43:54,1,1,-0.96765,0.26951,-0.34500,"(3, 1)",1,6.310
