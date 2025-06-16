@@ -101,18 +101,18 @@ def test(genome):
 def save_result(best_genome, fitness):
     net = RecurrentNetwork.create(best_genome, AttentionNEATConfig.NEAT_CONFIG)
 
-    with open(BASE_DIR + 'net_output_{fitness}.pkl', 'wb') as net_output:
+    with open(BASE_DIR + f'net_output_{fitness}.pkl', 'wb') as net_output:
         pickle.dump(net, net_output, pickle.HIGHEST_PROTOCOL)
 
-    with open(BASE_DIR + 'main_model_{fitness}.pkl', 'wb') as attention_neat_output:
+    with open(BASE_DIR + f'main_model_{fitness}.pkl', 'wb') as attention_neat_output:
         pickle.dump(runner, attention_neat_output, pickle.HIGHEST_PROTOCOL)
 
 
 def load(fitness, reset=True):
-    if reset or not os.path.isfile(BASE_DIR + 'main_model_{fitness}.pkl'):
+    if reset or not os.path.isfile(BASE_DIR + f'main_model_{fitness}.pkl'):
         return AttentionNEATModule(fitness)
     else:
-        with open(BASE_DIR + 'main_model_{fitness}.pkl', 'rb') as attention_neat_output:
+        with open(BASE_DIR + f'main_model_{fitness}.pkl', 'rb') as attention_neat_output:
             return pickle.load(attention_neat_output)
 
 
@@ -145,8 +145,8 @@ if __name__ == '__main__':
     fitness = 0
     if len(sys.argv) > 1:
         fitness = int(sys.argv[1])  # Take fitness from command-line argument
-        gym.make('Snake-v1', render_mode="human", fitness=fitness)  # Set fitness in environment creation
-        
+        #env = gym.make('Snake-v1', render_mode="human", fitness=fitness)  # Set fitness in environment creation
+        env = gym.make('Snake-v1', render_mode="None", fitness=fitness)
     print(SelfAttentionConfig.IMAGE_SHAPE)
     runner = load(fitness, reset=False)
     run(runner.population, fitness)

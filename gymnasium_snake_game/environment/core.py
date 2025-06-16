@@ -409,7 +409,7 @@ class Fitness:
         self.antiloop = True
         self.eating = True
         self.nice_smell = True
-        print(fitness)
+        
         match fitness:
             case 0:
                 return
