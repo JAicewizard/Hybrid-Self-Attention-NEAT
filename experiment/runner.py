@@ -11,7 +11,6 @@ from parallel import ParallelEvaluator
 from self_attention import SelfAttention
 from utility import process_action, initial_population
 
-
 class AttentionNEATModule(BaseAttentionRunnerModule):
     def __init__(self):
         super(AttentionNEATModule, self).__init__()
@@ -46,17 +45,19 @@ def get_action(net, ob):
     action = process_action(action)
     return action
 
-
-
-def eval_fitness(genome, config, candidate_params=None):
+def eval_fitness(genome, config, seed, candidate_params=None):
+    
+    if not isinstance(seed, int):
+        seed = 0
     fitness = []
     if candidate_params is None:
         candidate_params = runner.cmaes_model.get_current_parameters()
     runner.set_params(candidate_params)
-
+    env.unwrapped.set_seed(seed)
     for _ in range(AttentionNEATConfig.TRIALS):
         net = RecurrentNetwork.create(genome, config)
         ob, info = env.reset()
+        env.unwrapped.set_seed(seed)
         total_reward = 0
         step = 0
         done = False
@@ -67,6 +68,7 @@ def eval_fitness(genome, config, candidate_params=None):
                 
             if trunc:
                 env.reset()
+                env.unwrapped.set_seed(seed)
             step += 1
             total_reward += reward #+0.1
             #print(total_reward)
@@ -81,7 +83,7 @@ def test(genome):
     score_list, time_list = [], []
     for i in range(AttentionNEATConfig.TEST):
         start = time.time()
-        score = eval_fitness(genome, AttentionNEATConfig.NEAT_CONFIG, None)
+        score = eval_fitness(genome, AttentionNEATConfig.NEAT_CONFIG, 0, None)
         end = time.time()
 
         print('\n#################### Test Result #####################\n')
@@ -117,10 +119,25 @@ def run(population, generations=AttentionNEATConfig.GENERATIONS):
     parallel_runner = ParallelEvaluator(CPU_COUNT,
                                         runner.cmaes_model,
                                         eval_fitness)
+    seed_value=0
+    
+    def update_val():
+        nonlocal seed_value
+        seed_value+=1
+        
+    def eval(a,b, *args):
+        nonlocal seed_value
+        parallel_runner.evaluate(a,b,seed_value, *args)
 
-    winner = population.run(parallel_runner.evaluate,
+    def evalcmaes(a,b, *args):
+        nonlocal seed_value
+        parallel_runner.evaluate_cmaes_for_attention(a,b,seed_value, *args)
+
+    winner = population.run(update_val,
+                            lambda a,b, *args: eval(a,b, *args),
                             generations,
-                            parallel_runner.evaluate_cmaes_for_attention)
+                            lambda a,b, *args: evalcmaes(a,b, *args))
+    
     save_result(winner)
 
 if __name__ == '__main__':
