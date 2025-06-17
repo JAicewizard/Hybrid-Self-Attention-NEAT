@@ -20,7 +20,7 @@ class ParallelEvaluator(neat.parallel.ParallelEvaluator):
             jobs.append(self.pool.apply_async(self.eval_function, (best_genome, config, z,candidate_params)))
 
         for job in jobs:
-            candidate_fitness.append(job.get(timeout=self.timeout))
+            candidate_fitness.append(job.get(timeout=self.timeout)[0])
 
         self.cmaes.evolve(np.array(candidate_fitness))
 
@@ -31,6 +31,6 @@ class ParallelEvaluator(neat.parallel.ParallelEvaluator):
             jobs.append(self.pool.apply_async(self.eval_function, (config, candidate_params, False)))
 
         for job in jobs:
-            candidate_fitness.append(job.get(timeout=self.timeout))
+            candidate_fitness.append(job.get(timeout=self.timeout)[0])
 
         self.cmaes.evolve(np.array(candidate_fitness))

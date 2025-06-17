@@ -112,6 +112,7 @@ def load_and_play(model_path=BASE_DIR + 'main_model.pkl', fps=5):
 
 
 if __name__ == '__main__':
+    env = gym.make('Snake-v1', render_mode="human")
     # You can change the FPS here to make it faster or slower
     load_and_play(fps=30) # Play at 5 frames per second
     # load_and_play(fps=15) # Play at 15 frames per second

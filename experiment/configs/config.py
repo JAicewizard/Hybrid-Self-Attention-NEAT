@@ -16,7 +16,7 @@ if not sys.warnoptions:
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
-env = gym.make('Snake-v1', render_mode="human")
+# env = gym.make('Snake-v1', render_mode="human")
 #env = gym.make('Snake-v1', render_mode=None)
 
 BASE_DIR = 'experiment/'

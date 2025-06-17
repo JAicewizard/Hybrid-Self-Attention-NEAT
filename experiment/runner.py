@@ -13,7 +13,7 @@ from self_attention import SelfAttention
 from utility import process_action, initial_population
 
 class AttentionNEATModule(BaseAttentionRunnerModule):
-    def __init__(self):
+    def __init__(self, fitness):
         super(AttentionNEATModule, self).__init__()
 
         self.attention_model = SelfAttention(input_shape=SelfAttentionConfig.IMAGE_SHAPE,
@@ -30,7 +30,7 @@ class AttentionNEATModule(BaseAttentionRunnerModule):
                                                 init_params=self.get_params())
 
         __stats = neat.statistics.StatisticsReporter()
-        self.population = initial_population(None, __stats, AttentionNEATConfig.NEAT_CONFIG, True)
+        self.population = initial_population(None, __stats, AttentionNEATConfig.NEAT_CONFIG, True, fitness)
 
 
 def get_action(net, ob):
@@ -38,10 +38,11 @@ def get_action(net, ob):
     # new_ob = runner.attention_model.normalize_patch_centers(top)
     # new_ob = np.append(new_ob, [1.0])
     # print(ob.shape)
-    new_ob = np.vstack(ob)
+    # new_ob = np.vstack(ob)
     # print(new_ob.shape)
-    new_ob = np.argmax(new_ob, axis=1)
+    # new_ob = np.argmax(new_ob, axis=1)
     # print(new_ob.shape)
+    new_ob = ob
     action = net.activate(new_ob)
     action = process_action(action)
     return action
@@ -51,6 +52,7 @@ def eval_fitness(genome, config, seed, candidate_params=None):
     if not isinstance(seed, int):
         seed = 0
     fitness = []
+    apples_picked_up = []
     if candidate_params is None:
         candidate_params = runner.cmaes_model.get_current_parameters()
     runner.set_params(candidate_params)
@@ -60,31 +62,34 @@ def eval_fitness(genome, config, seed, candidate_params=None):
         ob, info = env.reset()
         env.unwrapped.set_seed(seed)
         total_reward = 0
+        total_apples = 0
         step = 0
         done = False
         
         while not done:
             action = get_action(net, ob)
-            ob, reward, done, trunc, info = env.step(action)
+            ob, (reward, apples), done, trunc, info = env.step(action)
                 
             if trunc:
                 env.reset()
                 env.unwrapped.set_seed(seed)
             step += 1
             total_reward += reward #+0.1
+            total_apples += apples
             #print(total_reward)
             #env.render()
 
         fitness.append(total_reward)
+        apples_picked_up.append(total_apples)
 
-    return np.array(fitness).mean()
+    return np.array(fitness).mean(), np.array(apples_picked_up).mean()
 
 
 def test(genome):
     score_list, time_list = [], []
     for i in range(AttentionNEATConfig.TEST):
         start = time.time()
-        score = eval_fitness(genome, AttentionNEATConfig.NEAT_CONFIG, 0, None)
+        score, apples = eval_fitness(genome, AttentionNEATConfig.NEAT_CONFIG, 0, None)
         end = time.time()
 
         print('\n#################### Test Result #####################\n')
@@ -98,27 +103,25 @@ def test(genome):
     print('Mean Test Fitness: {0:.3f}'.format(np.array(score_list).mean()))
 
 
-def save_result(fitness: int, best_genome):
+def save_result(best_genome, fitness):
     net = RecurrentNetwork.create(best_genome, AttentionNEATConfig.NEAT_CONFIG)
-    path = BASE_DIR + f'main_model_{fitness}.pkl'
 
-    with open(path, 'wb') as net_output:
+    with open(BASE_DIR + f'net_output_{fitness}.pkl', 'wb') as net_output:
         pickle.dump(net, net_output, pickle.HIGHEST_PROTOCOL)
 
-    with open(path, 'wb') as attention_neat_output:
+    with open(BASE_DIR + f'main_model_{fitness}.pkl', 'wb') as attention_neat_output:
         pickle.dump(runner, attention_neat_output, pickle.HIGHEST_PROTOCOL)
 
 
-def load(fitness: int, reset=True):
-    path = BASE_DIR + f'main_model_{fitness}.pkl'
-    if reset or not os.path.isfile(path):
-        return AttentionNEATModule()
+def load(fitness, reset=True):
+    if reset or not os.path.isfile(BASE_DIR + f'main_model_{fitness}.pkl'):
+        return AttentionNEATModule(fitness)
     else:
-        with open(path, 'rb') as attention_neat_output:
+        with open(BASE_DIR + f'main_model_{fitness}.pkl', 'rb') as attention_neat_output:
             return pickle.load(attention_neat_output)
 
 
-def run(population, fitness: int, generations=AttentionNEATConfig.GENERATIONS):
+def run(population, fitness, generations=AttentionNEATConfig.GENERATIONS):
     parallel_runner = ParallelEvaluator(CPU_COUNT,
                                         runner.cmaes_model,
                                         eval_fitness)
@@ -141,13 +144,14 @@ def run(population, fitness: int, generations=AttentionNEATConfig.GENERATIONS):
                             generations,
                             lambda a,b, *args: evalcmaes(a,b, *args))
     
-    save_result(winner)
+    save_result(winner, fitness)
 
 if __name__ == '__main__':
     fitness = 0
     if len(sys.argv) > 1:
-        fitness = int(sys.argv[1])
-        gym.make('Snake-v1', render_mode="human", fitness=fitness)
+        fitness = int(sys.argv[1])  # Take fitness from command-line argument
+        #env = gym.make('Snake-v1', render_mode="human", fitness=fitness)  # Set fitness in environment creation
+        env = gym.make('Snake-v1', render_mode="None", fitness=fitness)
     
     print(SelfAttentionConfig.IMAGE_SHAPE)
     runner = load(fitness, reset=False)
