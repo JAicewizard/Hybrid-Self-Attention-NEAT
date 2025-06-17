@@ -13,6 +13,9 @@ class SnakeEnv(gymnasium.Env):
         self.observation_space = spaces.Box(
             0, 1, shape=(self.snake.blocks_x, self.snake.blocks_y, 3))
 
+    def set_seed(self,seed):
+        self.snake.set_seed(seed)
+        
     def reset(self, seed=None, options=None):
         self.snake.init()
         if self.render_mode == "human":

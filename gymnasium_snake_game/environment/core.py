@@ -95,7 +95,7 @@ class Snake:
         self.episode += 1
         self.score = 0
         # Initialize direction to a known value, e.g., Right (3) for the snake to move initially
-        self.direction = 3 
+        self.direction = 2
         self.current_step = 0
         self.head = Block(self.blocks_x//2, self.blocks_y//2, self.head_color)
         self.body = [self.head.copy(i, 0, self.body_color)
@@ -103,6 +103,10 @@ class Snake:
         self.blocks = [self.food.block, self.head, *self.body]
         self.food.new_food(self.blocks)
         self.hunger = self.init_hunger
+        
+    def set_seed(self, seed):
+        self.seed = seed
+        random.seed(self.seed)
 
     def close(self):
         pygame.quit()
