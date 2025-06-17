@@ -134,6 +134,7 @@ class Snake:
         self.head.y += step_vec[1]
         
         dead = False
+        got_food = False
         
         # Eat food
         reward = self.fitness.next(self) 
@@ -144,6 +145,7 @@ class Snake:
             self.food.new_food(self.blocks)
             self.visited = set()
             self.hunger=self.init_hunger
+            got_food = True
         else:
             if self.hunger==0:
                 dead = True 
@@ -163,7 +165,7 @@ class Snake:
                 dead = True
                 #print('tail')
         
-        return self.observation(), reward, dead, truncated
+        return self.observation(), [got_food,reward], dead, truncated
 
     def observation(self):
         obs = np.zeros((self.blocks_x+2, self.blocks_y+2, 4), dtype=np.float32)
