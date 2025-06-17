@@ -133,13 +133,7 @@ class Snake:
 
         reward = 0.01  # baseline movement reward
         dead = False
-
-        # Loop detection
-        pos = (self.head.x, self.head.y)
-        if pos in self.visited:
-            reward -= 0.25  # Penalize for looping
-        else:
-            self.visited.add(pos)
+        got_food = False
         
         # Eat food
         if self.head == self.food.block:
@@ -149,6 +143,7 @@ class Snake:
             self.visited = set()
             reward += 5.0
             self.hunger=self.init_hunger
+            got_food = True
         else:
             if self.hunger==0:
                 dead = True 
@@ -171,8 +166,9 @@ class Snake:
             if self.head.x >= self.blocks_x or self.head.x < 0 or \
             self.head.y >= self.blocks_y or self.head.y < 0:
                 dead = True
-                #print('wall')
-        return self.observation(), reward, dead, truncated
+                #print('tail')
+        
+        return self.observation(), [got_food,reward], dead, truncated
 
     def observation(self):
         obs = np.zeros((self.blocks_x+2, self.blocks_y+2, 4), dtype=np.float32)

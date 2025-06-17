@@ -172,6 +172,7 @@ class DefaultGenome(object):
 
         # Fitness attention_hyper_neat_results.
         self.fitness = None
+        self.apples_picked_up = 0
 
     def configure_new(self, config):
         """Configure a new genome based on the given configuration."""

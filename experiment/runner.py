@@ -45,6 +45,7 @@ def eval_fitness(genome, config, seed, candidate_params=None):
     if not isinstance(seed, int):
         seed = 0
     fitness = []
+    apples_picked_up = []
     if candidate_params is None:
         candidate_params = runner.cmaes_model.get_current_parameters()
     runner.set_params(candidate_params)
@@ -54,31 +55,34 @@ def eval_fitness(genome, config, seed, candidate_params=None):
         ob, info = env.reset()
         env.unwrapped.set_seed(seed)
         total_reward = 0
+        total_apples = 0
         step = 0
         done = False
         
         while not done:
-            action, new_ob = get_action(net, ob)
-            ob, reward, done, trunc, info = env.step(action)
+            action = get_action(net, ob)
+            ob, (reward,apples), done, trunc, info = env.step(action)
                 
             if trunc:
                 env.reset()
                 env.unwrapped.set_seed(seed)
             step += 1
             total_reward += reward #+0.1
+            total_apples+=apples
             #print(total_reward)
             #env.render()
 
         fitness.append(total_reward)
-
-    return np.array(fitness).mean()
+        apples_picked_up.append(total_apples)
+        
+    return np.array(fitness).mean(), np.array(apples_picked_up).mean()
 
 
 def test(genome):
     score_list, time_list = [], []
     for i in range(AttentionNEATConfig.TEST):
         start = time.time()
-        score = eval_fitness(genome, AttentionNEATConfig.NEAT_CONFIG, 0, None)
+        score, apples = eval_fitness(genome, AttentionNEATConfig.NEAT_CONFIG, 0, None)
         end = time.time()
 
         print('\n#################### Test Result #####################\n')

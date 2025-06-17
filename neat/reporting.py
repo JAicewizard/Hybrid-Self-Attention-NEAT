@@ -174,7 +174,7 @@ class CSVReporter(BaseReporter):
                 writer = csv.writer(f)
                 writer.writerow([
                     'Timestamp', 'Generation', 'NumSpecies', 'AvgFitness', 'StdFitness',
-                    'BestFitness', 'BestGenomeSize', 'BestSpeciesID', 'GenerationTime'
+                    'BestFitness', 'BestApples', 'BestGenomeSize', 'BestSpeciesID', 'GenerationTime'
                 ])
 
     def start_generation(self, generation):
@@ -198,6 +198,7 @@ class CSVReporter(BaseReporter):
                 f"{fit_mean:.5f}",
                 f"{fit_std:.5f}",
                 f"{best_genome.fitness:.5f}",
+                f"{best_genome.apples_picked_up:.5f}",
                 best_genome.size(),
                 best_species_id,
                 f"{elapsed:.3f}"
