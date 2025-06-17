@@ -38,11 +38,10 @@ def get_action(net, ob):
     # new_ob = runner.attention_model.normalize_patch_centers(top)
     # new_ob = np.append(new_ob, [1.0])
     # print(ob.shape)
-    # new_ob = np.vstack(ob)
+    new_ob = np.vstack(ob)
     # print(new_ob.shape)
-    # new_ob = np.argmax(new_ob, axis=1)
+    new_ob = np.argmax(new_ob, axis=1)
     # print(new_ob.shape)
-    new_ob = ob
     action = net.activate(new_ob)
     action = process_action(action)
     return action
