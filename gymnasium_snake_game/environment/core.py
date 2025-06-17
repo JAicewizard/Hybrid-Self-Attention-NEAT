@@ -2,6 +2,47 @@ import math
 import numpy as np
 from .utils import *
 
+class Fitness:
+    base = True
+    antiloop = True
+    eating = True
+    nice_smell = True
+
+    def __init__(self, fitness):
+        print(fitness)
+        match fitness:
+            case 0:
+                return
+            case 1:
+                base = False
+            case 2:
+                antiloop = False
+            case 3:
+                eating = False
+            case 4:
+                nice_smell = False
+
+    def next(self, snake) -> float:
+        reward = 0
+        if self.base:
+            reward = 0.01  # baseline movement reward
+
+        # Loop detection
+        if self.antiloop:
+            pos = (snake.head.x, snake.head.y)
+            if pos in snake.visited:
+                reward -= 0.25  # Penalize for looping
+        
+        # Eat food
+        if snake.head == snake.food.block:
+            if self.eating:
+                reward += 5.0
+        elif self.nice_smell:
+            # Near food bonus
+            dist = abs(snake.head.x - snake.food.block.x) + abs(snake.head.y - snake.food.block.y)
+            if dist == 1:
+                reward += 0.2
+        return reward
 
 class Snake:
     def __init__(
@@ -21,6 +62,7 @@ class Snake:
         food_color=Color.green,
         head_color=Color.grey,
         body_color=Color.white,
+        fitness=0,
     ) -> None:
 
         self.episode = 0
@@ -46,6 +88,8 @@ class Snake:
         self.screen = None
         self.clock = None
         self.human_playing = False
+
+        self.fitness = Fitness(fitness)
 
     def init(self):
         self.episode += 1
@@ -126,15 +170,11 @@ class Snake:
         self.head.x += step_vec[0]
         self.head.y += step_vec[1]
 
-        reward = 0.01  # baseline movement reward
         dead = False
 
         # Loop detection
         pos = (self.head.x, self.head.y)
-        if pos in self.visited:
-            reward -= 0.25  # Penalize for looping
-        else:
-            self.visited.add(pos)
+        self.visited.add(pos)
         
         # Eat food
         if self.head == self.food.block:
@@ -142,7 +182,6 @@ class Snake:
             self.grow(x, y)
             self.food.new_food(self.blocks)
             self.visited = set()
-            reward += 5.0
             self.hunger=self.init_hunger
         else:
             if self.hunger==0:
@@ -153,11 +192,6 @@ class Snake:
                 
             self.move(x, y)
 
-            # Near food bonus
-            dist = abs(self.head.x - self.food.block.x) + abs(self.head.y - self.food.block.y)
-            if dist == 1:
-                reward += 0.2
-
             # Check collision with body or wall
             for block in self.body:
                 if self.head == block:
@@ -167,6 +201,9 @@ class Snake:
             self.head.y >= self.blocks_y or self.head.y < 0:
                 dead = True
                 #print('tail')
+        
+        reward = self.fitness.next(self)
+        
         return self.observation(), reward, dead, truncated
 
     def observation(self):

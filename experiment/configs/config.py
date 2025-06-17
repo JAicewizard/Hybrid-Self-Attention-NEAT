@@ -1,22 +1,15 @@
-import logging
+import os
 import sys
 import warnings
+import logging
 import shimmy
 import gymnasium as gym
-import numpy as np
 import pyvirtualdisplay
 
 import neat
 import gymnasium_snake_game
 
-import os
-
-print(gymnasium_snake_game.__file__)
-
 os.environ['PYVIRTUALDISPLAY_DISPLAYFD'] = '0'
-
-# _display = pyvirtualdisplay.Display(visible=True, size=(1400, 900))
-# _display.start()
 
 if not sys.warnoptions:
     warnings.simplefilter("ignore")
@@ -25,7 +18,6 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 env = gym.make('Snake-v1', render_mode="human")
 #env = gym.make('Snake-v1', render_mode=None)
-np.set_printoptions(linewidth=100)
 
 BASE_DIR = 'experiment/'
 CPU_COUNT = 6

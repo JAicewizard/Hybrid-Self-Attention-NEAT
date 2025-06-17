@@ -1,7 +1,8 @@
 import os
 import pickle
 import time
-import sys 
+import sys
+import numpy as np
 
 from base_runner import BaseAttentionRunnerModule
 from cma_es import CMAEvolutionStrategy
@@ -95,25 +96,27 @@ def test(genome):
     print('Mean Test Fitness: {0:.3f}'.format(np.array(score_list).mean()))
 
 
-def save_result(best_genome):
+def save_result(fitness: int, best_genome):
     net = RecurrentNetwork.create(best_genome, AttentionNEATConfig.NEAT_CONFIG)
+    path = BASE_DIR + f'main_model_{fitness}.pkl'
 
-    with open(BASE_DIR + 'net_output.pkl', 'wb') as net_output:
+    with open(path, 'wb') as net_output:
         pickle.dump(net, net_output, pickle.HIGHEST_PROTOCOL)
 
-    with open(BASE_DIR + 'main_model.pkl', 'wb') as attention_neat_output:
+    with open(path, 'wb') as attention_neat_output:
         pickle.dump(runner, attention_neat_output, pickle.HIGHEST_PROTOCOL)
 
 
-def load(reset=True):
-    if reset or not os.path.isfile(BASE_DIR + 'main_model.pkl'):
+def load(fitness: int, reset=True):
+    path = BASE_DIR + f'main_model_{fitness}.pkl'
+    if reset or not os.path.isfile(path):
         return AttentionNEATModule()
     else:
-        with open(BASE_DIR + 'main_model.pkl', 'rb') as attention_neat_output:
+        with open(path, 'rb') as attention_neat_output:
             return pickle.load(attention_neat_output)
 
 
-def run(population, generations=AttentionNEATConfig.GENERATIONS):
+def run(population, fitness: int, generations=AttentionNEATConfig.GENERATIONS):
     parallel_runner = ParallelEvaluator(CPU_COUNT,
                                         runner.cmaes_model,
                                         eval_fitness)
@@ -124,6 +127,11 @@ def run(population, generations=AttentionNEATConfig.GENERATIONS):
     save_result(winner)
 
 if __name__ == '__main__':
+    fitness = 0
+    if len(sys.argv) > 1:
+        fitness = int(sys.argv[1])
+        gym.make('Snake-v1', render_mode="human", fitness=fitness)
+    
     print(SelfAttentionConfig.IMAGE_SHAPE)
-    runner = load(reset=False)
-    run(runner.population)
+    runner = load(fitness, reset=False)
+    run(runner.population, fitness)
