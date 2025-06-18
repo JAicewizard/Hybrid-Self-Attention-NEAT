@@ -60,7 +60,7 @@ def eval_fitness(genome, config, seed, candidate_params=None):
         done = False
         
         while not done:
-            action = get_action(net, ob)
+            action,new_ob = get_action(net, ob)
             ob, (reward,apples), done, trunc, info = env.step(action)
                 
             if trunc:
