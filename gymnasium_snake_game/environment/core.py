@@ -448,5 +448,3 @@ class Fitness:
             if dist == 1:
                 reward += 0.2
         return reward
-
-        return reward
