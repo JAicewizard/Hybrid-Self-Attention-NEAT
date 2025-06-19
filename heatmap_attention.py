@@ -35,5 +35,5 @@ plt.xticks(range(GRID_SIZE))
 plt.yticks(range(GRID_SIZE))
 plt.gca().invert_yaxis()  # Optional: (0,0) in top-left
 plt.tight_layout()
-plt.savefig("attention_heatmap.png", dpi=300)
+plt.savefig("attention_heatmap_0.png", dpi=300)
 plt.show()

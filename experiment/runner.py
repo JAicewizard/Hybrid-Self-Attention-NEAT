@@ -175,8 +175,8 @@ if __name__ == '__main__':
     
     if len(sys.argv) > 1:
         fitness = int(sys.argv[1])  # Take fitness from command-line argument
-        env=gym.make('Snake-v1', render_mode="human", fitness=fitness)  # Set fitness in environment creation
-        #env = gym.make('Snake-v1', render_mode=None, fitness=fitness)
+        # env = gym.make('Snake-v1', render_mode="human", fitness=fitness)  # Set fitness in environment creation
+        env = gym.make('Snake-v1', render_mode=None, fitness=fitness)
     print(SelfAttentionConfig.IMAGE_SHAPE)
     runner = load(fitness, reset=False)
     run(runner.population, fitness)

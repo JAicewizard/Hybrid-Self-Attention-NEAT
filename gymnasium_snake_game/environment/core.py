@@ -405,8 +405,6 @@ class Snake:
     
 # Define the Fitness class
 class Fitness:
-    
-
     def __init__(self, fitness):
         self.base = True
         self.antiloop = True
@@ -441,7 +439,6 @@ class Fitness:
         if snake.head == snake.food.block:
             if self.eating:
                 reward += 5.0
-                snake.visited = set()
         elif self.nice_smell:
             # Near food bonus
             dist = abs(snake.head.x - snake.food.block.x) + abs(snake.head.y - snake.food.block.y)

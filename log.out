@@ -1,0 +1,228 @@
+commit 3634aede1a996fa2dbf5b3bcdece0678bcd01ee4
+Author: Jaap Aarts <jaap.aarts1@gmail.com>
+Date:   Mon Jun 16 16:21:01 2025 +0200
+
+    Allow setting fitness
+
+commit a993d5839f488b7eb9f103abbca072bdc440e6a7
+Author: martan <martan.vanderstraaten@ru.nl>
+Date:   Mon Jun 16 18:23:01 2025 +0200
+
+    apples in same positions
+
+commit a8799ee890bcda8f0085507cda580066ca2d412b
+Author: martan <martan.vanderstraaten@ru.nl>
+Date:   Mon Jun 16 14:08:08 2025 +0200
+
+    added csv logging
+
+commit 6659de373034c8de353854a65dcc73d2ed229aff
+Author: martan <martan.vanderstraaten@ru.nl>
+Date:   Thu Jun 12 20:03:00 2025 +0200
+
+    attention+field+new_fitness
+
+commit 572a9f013c5c94852683a59d6794cc5b0fd49f54
+Author: martan <martan.vanderstraaten@ru.nl>
+Date:   Mon Jun 9 20:14:49 2025 +0200
+
+    fixed directionality issue
+
+commit 2456d884c149eeeedbd07f53635e9eed7f8be6f2
+Author: martan <martan.vanderstraaten@ru.nl>
+Date:   Mon Jun 9 19:42:12 2025 +0200
+
+    entire field provided to snake
+
+commit 987c0709f8aba437d9deb12306f161523463e904
+Author: martan <martan.vanderstraaten@ru.nl>
+Date:   Mon Jun 9 19:27:57 2025 +0200
+
+    reset field size
+
+commit 000997a8809140973d3c8ab380409fc4afff9a60
+Author: martan <martan.vanderstraaten@ru.nl>
+Date:   Mon Jun 9 19:25:35 2025 +0200
+
+    final version of this branch, snake working with 7 directional input and modified reward function
+
+commit 9e1926e84080dff58c1e4c572a5d21e6e5db156e
+Author: martan <martan.vanderstraaten@ru.nl>
+Date:   Mon Jun 9 13:10:21 2025 +0200
+
+    working version with directionality fixed
+
+commit 40b78b101aa44ed2ecb77af4f9721f393b85ec57
+Author: martan <martan.vanderstraaten@ru.nl>
+Date:   Mon Jun 9 12:20:54 2025 +0200
+
+    hunger instead of cutoff
+
+commit 6a9be7027dd9d5187b361a591b4f899ef4782231
+Author: martan <martan.vanderstraaten@ru.nl>
+Date:   Mon Jun 9 12:07:01 2025 +0200
+
+    added near food bonus
+
+commit e3d4f16c7ec2a2e4e78b733851a450a859c7f45a
+Author: martan <martan.vanderstraaten@ru.nl>
+Date:   Mon Jun 9 11:26:05 2025 +0200
+
+    without near food, with dead punishment
+
+commit a2587bb8ec4b5af3610b7491780f2cd96eabc755
+Author: martan <martan.vanderstraaten@ru.nl>
+Date:   Sun Jun 8 22:07:41 2025 +0200
+
+    21 inputs and 3 outputs akin to neat-snake
+
+commit 5772526105062ae8e9250df0d32e34f1f02edfee
+Author: martan <martan.vanderstraaten@ru.nl>
+Date:   Fri Jun 6 12:51:41 2025 +0200
+
+    all same output, but is running
+
+commit 00e7c9cd0a02d95ae8f0e46b410fc09560d7126d
+Author: martan <martan.vanderstraaten@ru.nl>
+Date:   Fri Jun 6 12:08:32 2025 +0200
+
+    fixed input size
+
+commit 6a71207c1fd4d548ae0ead594a48b365c8444ba2
+Author: Jaap Aarts <jaap.aarts1@gmail.com>
+Date:   Fri Jun 6 12:05:26 2025 +0200
+
+    Don't use attention during training
+
+commit 0c211ba98a9a8df4e015f5613904b0ee5308c10f
+Author: Jaap Aarts <jaap.aarts1@gmail.com>
+Date:   Fri Jun 6 11:59:26 2025 +0200
+
+    change grid size
+
+commit 01568101cac0f47b012b24da6e546d9602deec65
+Author: Jaap Aarts <jaap.aarts1@gmail.com>
+Date:   Thu Jun 5 14:01:20 2025 +0200
+
+    Add max steps
+
+commit e1f172c4b7b4801289e686383f7e2bcde64f8d11
+Author: Jaap Aarts <jaap.aarts1@gmail.com>
+Date:   Thu May 22 15:21:22 2025 +0200
+
+    Local snake-game  with walls
+
+commit e51f48bfbfc4f114b258f11fb31ab1ae379b4e34
+Author: martan <martan.vanderstraaten@ru.nl>
+Date:   Thu May 22 11:46:30 2025 +0200
+
+    modified hypers
+
+commit 93a0a961cb9d83c19da5a06aea0ac3d37ceed464
+Author: martan <martan.vanderstraaten@ru.nl>
+Date:   Tue May 20 15:46:19 2025 +0200
+
+    modified reward to reward staying alive
+
+commit 0e55c175f00e7988dc34c336c0d042e2875308c4
+Author: martan <martan.vanderstraaten@ru.nl>
+Date:   Tue May 20 14:59:56 2025 +0200
+
+    removed aaaa
+
+commit efcd40305fea16649af1b352b0ca5bf2abd91d16
+Author: martan <martan.vanderstraaten@ru.nl>
+Date:   Tue May 20 14:53:11 2025 +0200
+
+    fixed wsl compatibility, modified gitignore to ignore local python versions in folder
+
+commit fe0e00370536bb9e48ea0592f5a5b69164bbb304
+Author: Jaap Aarts <jaap.aarts1@gmail.com>
+Date:   Tue May 20 14:50:42 2025 +0200
+
+    Fix displaying game
+
+commit 5747f72e48e8b2f593e5a7cd2530f98b3628737f
+Merge: 48118be 790badf
+Author: ricklitjens <rick.litjens@kpnmail.nl>
+Date:   Fri May 16 08:52:21 2025 +0200
+
+    Merge branch 'main' of https://github.com/JAicewizard/Hybrid-Self-Attention-NEAT
+
+commit 48118be1cec217767c07632fd1d6fe8499965618
+Author: ricklitjens <rick.litjens@kpnmail.nl>
+Date:   Thu May 15 17:08:25 2025 +0200
+
+    Changed game to snake
+
+commit 790badf9c569d5b5903873198a6413e7fef5e6d2
+Author: Jaap Aarts <jaap.aarts1@gmail.com>
+Date:   Thu May 8 10:49:27 2025 +0200
+
+    Fix readme
+
+commit bc87d4c63e4b3ec78ce07d1305894c3bae891079
+Author: Jaap Aarts <jaap.aarts1@gmail.com>
+Date:   Sun May 4 10:45:53 2025 +0200
+
+    Fix python 3.13
+
+commit c838d3310aef7f758ef3ccbb45f4b8ea5eb38a7d
+Author: Saman Khamesian <saman.khamesian@gmail.com>
+Date:   Mon Jun 19 17:21:42 2023 +0330
+
+    Update README.md
+
+commit 830a5e350b09dca59c5e0dba1fe65ecf340ff30d
+Author: Saman Khamesian <saman.khamesian@gmail.com>
+Date:   Mon Jun 19 17:20:48 2023 +0330
+
+    Update README.md
+
+commit 5a589bb85794ee594f4aaf75f12b0d9240da75a4
+Author: Saman Khamesian <saman.khamesian@gmail.com>
+Date:   Sun Jun 18 00:34:46 2023 +0330
+
+    Update README.md
+
+commit 49d709f8d7f1cf2a89149f7c699c39eb9f3093a0
+Author: Saman Khamesian <saman.khamesian@gmail.com>
+Date:   Fri Jul 15 17:11:54 2022 +0430
+
+    Update README.md
+
+commit 34e827bac63d6207ab0875532fdbc49b2fa531ca
+Author: Saman Khamesian <saman.khamesian@gmail.com>
+Date:   Fri Jul 15 17:10:00 2022 +0430
+
+    Update README.md
+
+commit 50ef66039f6a279aaf002c29ce60229a48934ed6
+Author: Saman Khamesian <saman.khamesian@gmail.com>
+Date:   Fri Jul 15 17:08:54 2022 +0430
+
+    Update README.md
+
+commit 9064e9e5c5fbbbc961980b53064b9fb3ae321288
+Author: Saman Khamesian <saman.khamesian@gmail.com>
+Date:   Wed Dec 15 22:57:47 2021 +0330
+
+    Update README.md
+
+commit 7bd70d1e703d7a08300319081a55abdeb8c04600
+Author: Saman Khamesian <saman.khamesian@gmail.com>
+Date:   Wed Dec 15 22:50:46 2021 +0330
+
+    Add source code and other stuffs
+
+commit 1018d320d5287e58efe5e554feab1dfc4a428e54
+Author: Saman Khamesian <saman.khamesian@gmail.com>
+Date:   Wed Dec 15 22:35:52 2021 +0330
+
+    Update README.md
+
+commit 735c744d56255be684229ec7e175dbc1a7942134
+Author: Saman Khamesian <saman.khamesian@gmail.com>
+Date:   Wed Dec 15 22:34:46 2021 +0330
+
+    Initial commit

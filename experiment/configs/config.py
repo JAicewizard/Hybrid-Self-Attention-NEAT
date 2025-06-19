@@ -31,7 +31,6 @@ np.set_printoptions(linewidth=100)
 BASE_DIR = 'experiment/'
 CPU_COUNT = 6
 
-
 class AttentionNEATConfig:
     ACTIVATION = 'sigmoid'
     GENERATIONS = 100
@@ -43,7 +42,6 @@ class AttentionNEATConfig:
                                      neat.stagnation.DefaultStagnation,
                                      BASE_DIR + 'configs/config_attention_neat')
 
-
 class SelfAttentionConfig:
     IMAGE_SHAPE = (12, 12, 4)
     PATCH_SIZE = 1
@@ -51,11 +49,9 @@ class SelfAttentionConfig:
     TRANSFORMER_D = 4
     TOP_K = 20
 
-
 class CMAESConfig:
     POP_SIZE = 32
     INIT_SIGMA = 0.1
-
 
 class TunerConfig:
     GENERATIONS = 100
