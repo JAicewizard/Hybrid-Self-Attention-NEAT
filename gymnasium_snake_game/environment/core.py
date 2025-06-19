@@ -163,6 +163,7 @@ class Snake:
             if self.head.x >= self.blocks_x or self.head.x < 0 or \
             self.head.y >= self.blocks_y or self.head.y < 0:
                 dead = True
+                
                 #print('tail')
         
         return self.observation(), [got_food,reward], dead, truncated

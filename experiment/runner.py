@@ -36,10 +36,18 @@ class AttentionNEATModule(BaseAttentionRunnerModule):
 
 
 def get_action(net, ob):
-    top = runner.attention_model.get_output(ob)
-    new_ob = runner.attention_model.normalize_patch_centers(top)
-    new_ob = np.append(new_ob, [1.0])
-    action = net.activate(new_ob)
+    top = runner.attention_model.get_output(ob)  # patch centers (coords)
+    new_ob_coords = runner.attention_model.normalize_patch_centers(top)
+
+    # Extract actual pixel data for each top patch
+    patch_pixels = []
+    for x,y in top.detach().cpu().numpy().astype(int):
+        patch = int(np.argmax(ob, axis=-1)[x,y])
+        patch_pixels.append(patch)
+
+    combined_input = np.concatenate([new_ob_coords, patch_pixels, [1.0]])
+
+    action = net.activate(combined_input)
     action = process_action(action)
     return action, top
 
@@ -87,6 +95,8 @@ def eval_fitness(genome, config, seed, candidate_params=None):
 
                 ob, (reward, apples), done, trunc, info = env.step(action)
 
+                if done:
+                    reward -= 5
                 if trunc:
                     env.reset()
                     env.unwrapped.set_seed(seed)
@@ -166,7 +176,7 @@ if __name__ == '__main__':
     if len(sys.argv) > 1:
         fitness = int(sys.argv[1])  # Take fitness from command-line argument
         env=gym.make('Snake-v1', render_mode="human", fitness=fitness)  # Set fitness in environment creation
-        env = gym.make('Snake-v1', render_mode=None, fitness=fitness)
+        #env = gym.make('Snake-v1', render_mode=None, fitness=fitness)
     print(SelfAttentionConfig.IMAGE_SHAPE)
     runner = load(fitness, reset=False)
     run(runner.population, fitness)

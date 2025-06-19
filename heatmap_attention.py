@@ -6,13 +6,13 @@ import matplotlib.pyplot as plt
 # Config
 CSV_DIR = './'  # Change to your directory
 GRID_SIZE = 12
-NUM_FILES = 1
+NUM_FILES = 48
 
 # Initialize grid to count occurrences
 heatmap = np.zeros((GRID_SIZE, GRID_SIZE), dtype=int)
 
 # Process each CSV file
-for i in range(0,NUM_FILES):
+for i in range(47,NUM_FILES):
     filename = os.path.join(CSV_DIR, f'attention_0_{i}.csv')
     with open(filename, 'r') as file:
         reader = csv.reader(file)

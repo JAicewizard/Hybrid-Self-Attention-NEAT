@@ -27,7 +27,15 @@ class SelfAttentionModule(nn.Module):
         dot = torch.bmm(queries, keys.transpose(1, 2))
         scaled_dot = torch.div(dot, torch.sqrt(torch.tensor(input_d).float()))
 
-        return scaled_dot
+        attention_weights = torch.softmax(scaled_dot, dim=-1)
+
+        if self.training:  # only add noise during training
+            noise = torch.randn_like(attention_weights) * 0.01  # stddev can be tuned
+            attention_weights = attention_weights + noise
+            attention_weights = torch.clamp(attention_weights, min=0)  # prevent negatives
+            attention_weights = attention_weights / attention_weights.sum(dim=-1, keepdim=True)  # re-normalize
+
+        return attention_weights
 
     @property
     def layers(self):
@@ -40,12 +48,16 @@ class SelfAttention:
         self.__patch_size, self.__patch_channels = patch_size, self.__input_channels
         self.__patch_stride = patch_stride
         self.__input_d = self.__get_input_dimension()
+
         self.__top_k = top_k
         self.__screen_dir = direction
         self.__num_patches = self.__get_number_of_patches()
         self.__patch_centers = self.__get_patch_centers()
 
-        self.__attention = SelfAttentionModule(self.__input_d, transformer_d)
+        # Adjust input dimension to add 2 for positional encoding (y, x)
+        self.__input_d_with_pos = self.__input_d + 2
+
+        self.__attention = SelfAttentionModule(self.__input_d_with_pos, transformer_d)
 
         self.__transform = transforms.Compose([
             transforms.ToPILImage(),
@@ -79,7 +91,17 @@ class SelfAttention:
         patches = patches.unfold(2, self.__patch_size, self.__patch_stride).permute(0, 2, 1, 4, 3)
         patches = patches.reshape((-1, self.__patch_size, self.__patch_size, self.__patch_channels))
         flattened_patches = patches.reshape((1, -1, self.__input_d))
-        return flattened_patches
+
+        # Normalize patch centers to [0, 1]
+        normalized_centers = self.__patch_centers / torch.tensor([self.__input_height, self.__input_width]).float()
+
+        # Add positional encoding: concatenate normalized (y, x) coords to each patch embedding
+        # flattened_patches shape: (1, num_patches, input_d)
+        # normalized_centers shape: (num_patches, 2)
+        pos_encoding = normalized_centers.unsqueeze(0)  # (1, num_patches, 2)
+
+        patches_with_pos = torch.cat([flattened_patches, pos_encoding], dim=-1)  # (1, num_patches, input_d+2)
+        return patches_with_pos
 
     @staticmethod
     def __apply_softmax_on_columns(input_matrix):
