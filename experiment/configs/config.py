@@ -25,6 +25,7 @@ if not sys.warnoptions:
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
+env = gym.make('Snake-v1', render_mode=None)
 
 np.set_printoptions(linewidth=100)
 
