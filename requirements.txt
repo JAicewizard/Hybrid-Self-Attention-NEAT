@@ -11,3 +11,4 @@ torch==2.7.0
 torchvision==0.22.0
 numpy==2.2.5
 Shimmy==2.0.0
+pygame==2.6.1
