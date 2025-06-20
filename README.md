@@ -1,3 +1,13 @@
+# Natural computing
+
+This is a short section specific for the course natural computing. Below the original readme for this project can be found. Not all of that will be relevant as we have made some changes.
+
+## Running the experiments
+
+The first thing to do, is to install the required packaged. This has been tested on python 3.13. The packages can be installed from requirements.txt: `pip install -r requirements.txt`.
+
+Then you need to switch to the corresponding branch: `attention_new_fitness`, `better_inputs`, or `full_screen_inputs`. Once this is done you can run `python -m experiment.runner {i}`, replacing `{i}` with the number of the fitness function you want to try.
+
 # Hybrid-Self-Attention-NEAT
 
 ### Abstract
